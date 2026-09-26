@@ -34,4 +34,12 @@ async function updateExpense(id, { item, description, amount, occurredAt }) {
   return result.rows[0];
 }
 
-module.exports = { createExpense, getExpensesByUser, getExpenseById, updateExpense };
+async function getTotalExpenseByUser(userId) {
+  const result = await pool.query(
+    'SELECT COALESCE(SUM(amount), 0) AS total FROM expenses WHERE user_id = $1',
+    [userId]
+  );
+  return parseFloat(result.rows[0].total);
+}
+
+module.exports = { createExpense, getExpensesByUser, getExpenseById, updateExpense, getTotalExpenseByUser };

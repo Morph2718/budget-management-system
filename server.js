@@ -39,3 +39,7 @@ app.use('/api/incomes', incomeRoutes);
 
 const expenseRoutes = require('./src/routes/expenseRoutes');
 app.use('/api/expenses', expenseRoutes);
+
+// Summary route
+const summaryRoutes = require('./src/routes/summaryRoutes');
+app.use('/api/summary', summaryRoutes);
