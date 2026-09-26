@@ -89,4 +89,44 @@ async function login(req, res) {
   }
 }
 
-module.exports = { register, login };
+async function updateProfile(req, res) {
+  try {
+    const { firstName, lastName, email, newPassword } = req.body;
+    const userId = req.user.userId;
+
+    if (!firstName || !lastName || !email) {
+      return res.status(400).json({ error: 'Nama dan email wajib diisi' });
+    }
+
+    // Kalau user mau ganti email, cek dulu email baru tidak dipakai user lain
+    const existingEmail = await userModel.findByEmail(email);
+    if (existingEmail && existingEmail.id !== userId) {
+      return res.status(409).json({ error: 'Email sudah dipakai user lain' });
+    }
+
+    let passwordHash = null;
+    if (newPassword) {
+      passwordHash = await bcrypt.hash(newPassword, 10);
+    }
+
+    const updatedUser = await userModel.updateProfile(userId, {
+      firstName,
+      lastName,
+      email,
+      passwordHash,
+    });
+
+    res.status(200).json({ message: 'Profil berhasil diperbarui', user: updatedUser });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Terjadi kesalahan server' });
+  }
+}
+
+function logout(req, res) {
+  // Untuk JWT, logout sesungguhnya dilakukan di sisi client (hapus token tersimpan).
+  // Endpoint ini konfirmasi saja + nanti dicatat ke activity_logs.
+  res.status(200).json({ message: 'Logout berhasil' });
+}
+
+module.exports = { register, login, updateProfile, logout };

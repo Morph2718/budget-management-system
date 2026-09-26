@@ -1,28 +1,24 @@
 // Import
 const express = require('express');
-require('dotenv').config(); // baca isi file .env
+require('dotenv').config();
+
+const pool = require('./src/config/db');
+const authRoutes = require('./src/routes/authRoutes');
+const incomeRoutes = require('./src/routes/incomeRoutes');
+const expenseRoutes = require('./src/routes/expenseRoutes');
+const summaryRoutes = require('./src/routes/summaryRoutes');
 
 // Inisialisasi
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Middleware & route dasar
-app.use(express.json()); // biar server bisa baca body JSON dari request
+// Middleware
+app.use(express.json());
 
-const authRoutes = require('./src/routes/authRoutes');
-app.use('/api/auth', authRoutes);
-
+// Routes
 app.get('/', (req, res) => {
   res.send('OK');
 });
-
-// Nyalakan server
-app.listen(PORT, () => {
-  console.log(`Server jalan di port ${PORT}`);
-});
-
-// Cek koneksi database
-const pool = require('./src/config/db');
 
 app.get('/health', async (req, res) => {
   try {
@@ -33,13 +29,12 @@ app.get('/health', async (req, res) => {
   }
 });
 
-// Routes untuk income dan expense
-const incomeRoutes = require('./src/routes/incomeRoutes');
+app.use('/api/auth', authRoutes);
 app.use('/api/incomes', incomeRoutes);
-
-const expenseRoutes = require('./src/routes/expenseRoutes');
 app.use('/api/expenses', expenseRoutes);
-
-// Summary route
-const summaryRoutes = require('./src/routes/summaryRoutes');
 app.use('/api/summary', summaryRoutes);
+
+// Nyalakan server — selalu paling akhir
+app.listen(PORT, () => {
+  console.log(`Server jalan di port ${PORT}`);
+});
