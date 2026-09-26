@@ -45,4 +45,13 @@ async function findById(userId) {
   return result.rows[0];
 }
 
-module.exports = { findByUsername, findByEmail, createUser, updateProfile, findById };
+async function getAllUsers() {
+  const result = await pool.query(
+    `SELECT id, first_name, last_name, email, username, role, created_at
+     FROM users
+     ORDER BY created_at DESC`
+  );
+  return result.rows;
+}
+
+module.exports = { findByUsername, findByEmail, createUser, updateProfile, findById, getAllUsers };

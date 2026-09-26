@@ -7,6 +7,7 @@ const authRoutes = require('./src/routes/authRoutes');
 const incomeRoutes = require('./src/routes/incomeRoutes');
 const expenseRoutes = require('./src/routes/expenseRoutes');
 const summaryRoutes = require('./src/routes/summaryRoutes');
+const adminRoutes = require('./src/routes/adminRoutes');
 
 // Inisialisasi
 const app = express();
@@ -33,6 +34,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/incomes', incomeRoutes);
 app.use('/api/expenses', expenseRoutes);
 app.use('/api/summary', summaryRoutes);
+app.use('/api/admin', adminRoutes);
 
 // Nyalakan server — selalu paling akhir
 app.listen(PORT, () => {
