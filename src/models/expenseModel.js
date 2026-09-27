@@ -42,4 +42,19 @@ async function getTotalExpenseByUser(userId) {
   return parseFloat(result.rows[0].total);
 }
 
-module.exports = { createExpense, getExpensesByUser, getExpenseById, updateExpense, getTotalExpenseByUser };
+async function getAllExpenses() {
+  const result = await pool.query(
+    `SELECT expenses.*, users.username, users.first_name, users.last_name
+     FROM expenses
+     JOIN users ON expenses.user_id = users.id
+     ORDER BY expenses.occurred_at DESC`
+  );
+  return result.rows;
+}
+
+async function getTotalExpenseAll() {
+  const result = await pool.query('SELECT COALESCE(SUM(amount), 0) AS total FROM expenses');
+  return parseFloat(result.rows[0].total);
+}
+
+module.exports = { createExpense, getExpensesByUser, getExpenseById, updateExpense, getTotalExpenseByUser, getAllExpenses, getTotalExpenseAll };

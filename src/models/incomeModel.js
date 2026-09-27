@@ -42,4 +42,19 @@ async function getTotalIncomeByUser(userId) {
   return parseFloat(result.rows[0].total);
 }
 
-module.exports = { createIncome, getIncomesByUser, getIncomeById, updateIncome, getTotalIncomeByUser };
+async function getAllIncomes() {
+  const result = await pool.query(
+    `SELECT incomes.*, users.username, users.first_name, users.last_name
+     FROM incomes
+     JOIN users ON incomes.user_id = users.id
+     ORDER BY incomes.occurred_at DESC`
+  );
+  return result.rows;
+}
+
+async function getTotalIncomeAll() {
+  const result = await pool.query('SELECT COALESCE(SUM(amount), 0) AS total FROM incomes');
+  return parseFloat(result.rows[0].total);
+}
+
+module.exports = { createIncome, getIncomesByUser, getIncomeById, updateIncome, getTotalIncomeByUser, getAllIncomes, getTotalIncomeAll };
