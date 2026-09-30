@@ -1,4 +1,5 @@
 const incomeModel = require('../models/incomeModel');
+const activityLogModel = require('../models/activityLogModel');
 
 async function create(req, res) {
   try {
@@ -16,9 +17,19 @@ async function create(req, res) {
       occurredAt,
     });
 
+    await activityLogModel.logActivity({
+      userId: req.user.userId,
+      action: 'create_income',
+      entity: 'income',
+      entityId: income.id,
+      ipAddress: req.ip,
+      userAgent: req.headers['user-agent'],
+    });
+
     res.status(201).json({ message: 'Pemasukan berhasil ditambahkan', income });
   } catch (err) {
-    console.error(err);
+    Sentry.captureException(err);
+    req.log.error({ err }, 'Gagal menambahkan pemasukan');
     res.status(500).json({ error: 'Terjadi kesalahan server' });
   }
 }
@@ -28,7 +39,8 @@ async function getAll(req, res) {
     const incomes = await incomeModel.getIncomesByUser(req.user.userId);
     res.status(200).json({ incomes });
   } catch (err) {
-    console.error(err);
+    Sentry.captureException(err);
+    req.log.error({ err }, 'Gagal mengambil pemasukan');
     res.status(500).json({ error: 'Terjadi kesalahan server' });
   }
 }
@@ -48,9 +60,18 @@ async function update(req, res) {
     }
 
     const updated = await incomeModel.updateIncome(id, { source, description, amount, occurredAt });
+    await activityLogModel.logActivity({
+      userId: req.user.userId,
+      action: 'update_income',
+      entity: 'income',
+      entityId: updated.id,
+      ipAddress: req.ip,
+      userAgent: req.headers['user-agent'],
+    });
     res.status(200).json({ message: 'Pemasukan berhasil diperbarui', income: updated });
   } catch (err) {
-    console.error(err);
+    Sentry.captureException(err);
+    req.log.error({ err }, 'Gagal memperbarui pemasukan');
     res.status(500).json({ error: 'Terjadi kesalahan server' });
   }
 }

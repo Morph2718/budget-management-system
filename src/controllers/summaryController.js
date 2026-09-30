@@ -15,7 +15,8 @@ async function getSummary(req, res) {
       balance,
     });
   } catch (err) {
-    console.error(err);
+    Sentry.captureException(err);
+    req.log.error({ err }, 'Gagal mengambil ringkasan');
     res.status(500).json({ error: 'Terjadi kesalahan server' });
   }
 }

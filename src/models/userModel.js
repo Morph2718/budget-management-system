@@ -54,4 +54,9 @@ async function getAllUsers() {
   return result.rows;
 }
 
-module.exports = { findByUsername, findByEmail, createUser, updateProfile, findById, getAllUsers };
+async function deleteUser(id) {
+  const result = await pool.query('DELETE FROM users WHERE id = $1 RETURNING id, username, role', [id]);
+  return result.rows[0];
+}
+
+module.exports = { findByUsername, findByEmail, createUser, updateProfile, findById, getAllUsers, deleteUser };

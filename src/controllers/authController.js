@@ -1,5 +1,6 @@
 const bcrypt = require('bcrypt');
 const userModel = require('../models/userModel');
+const activityLogModel = require('../models/activityLogModel');
 
 async function register(req, res) {
   try {
@@ -32,6 +33,15 @@ async function register(req, res) {
       username,
       passwordHash,
     });
+    
+    await activityLogModel.logActivity({
+      userId: newUser.id,
+      action: 'register',
+      entity: 'user',
+      entityId: newUser.id,
+      ipAddress: req.ip,
+      userAgent: req.headers['user-agent'],
+    });
 
     // 5. Kirim response - TANPA password_hash ikut terkirim balik
     res.status(201).json({
@@ -39,13 +49,15 @@ async function register(req, res) {
       user: newUser,
     });
   } catch (err) {
-    console.error(err);
+    Sentry.captureException(err);
+    req.log.error({ err }, 'Gagal register user');
     res.status(500).json({ error: 'Terjadi kesalahan server' });
   }
 }
  // JWT
 const jwt = require('jsonwebtoken');
 
+// Activity Log & Logging
 async function login(req, res) {
   try {
     const { username, password } = req.body;
@@ -54,37 +66,55 @@ async function login(req, res) {
       return res.status(400).json({ error: 'Username dan password wajib diisi' });
     }
 
-    // 1. Cari user berdasarkan username
     const user = await userModel.findByUsername(username);
     if (!user) {
+      await activityLogModel.logActivity({
+        userId: null,
+        action: 'login_failed',
+        entity: 'user',
+        entityId: null,
+        ipAddress: req.ip,
+        userAgent: req.headers['user-agent'],
+      });
       return res.status(401).json({ error: 'Username atau password salah' });
     }
 
-    // 2. Bandingkan password yang dikirim dengan hash di database
     const isPasswordValid = await bcrypt.compare(password, user.password_hash);
     if (!isPasswordValid) {
+      await activityLogModel.logActivity({
+        userId: user.id,
+        action: 'login_failed',
+        entity: 'user',
+        entityId: user.id,
+        ipAddress: req.ip,
+        userAgent: req.headers['user-agent'],
+      });
       return res.status(401).json({ error: 'Username atau password salah' });
     }
 
-    // 3. Buat JWT token
     const token = jwt.sign(
       { userId: user.id, role: user.role },
       process.env.JWT_SECRET,
       { expiresIn: '1d' }
     );
 
-    // 4. Kirim token ke user
+    await activityLogModel.logActivity({
+      userId: user.id,
+      action: 'login_success',
+      entity: 'user',
+      entityId: user.id,
+      ipAddress: req.ip,
+      userAgent: req.headers['user-agent'],
+    });
+
     res.status(200).json({
       message: 'Login berhasil',
       token,
-      user: {
-        id: user.id,
-        username: user.username,
-        role: user.role,
-      },
+      user: { id: user.id, username: user.username, role: user.role },
     });
   } catch (err) {
-    console.error(err);
+    Sentry.captureException(err);
+    req.log.error({ err }, 'Gagal login user');
     res.status(500).json({ error: 'Terjadi kesalahan server' });
   }
 }
@@ -118,7 +148,8 @@ async function updateProfile(req, res) {
 
     res.status(200).json({ message: 'Profil berhasil diperbarui', user: updatedUser });
   } catch (err) {
-    console.error(err);
+    Sentry.captureException(err);
+    req.log.error({ err }, 'Gagal memperbarui profil');
     res.status(500).json({ error: 'Terjadi kesalahan server' });
   }
 }
