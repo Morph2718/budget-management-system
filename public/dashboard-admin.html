@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Dashboard Admin</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <h1>Dashboard Admin</h1>
+  <nav>
+    <button id="logoutBtn">Logout</button>
+  </nav>
+
+  <section>
+    <h2>Ringkasan Sistem</h2>
+    <p>Total Pemasukan: <span id="adminTotalIncome">0</span></p>
+    <p>Total Pengeluaran: <span id="adminTotalExpense">0</span></p>
+    <p>Saldo: <span id="adminBalance">0</span></p>
+    <p>Total User: <span id="adminTotalUsers">0</span></p>
+  </section>
+
+  <section>
+    <h2>Daftar User</h2>
+    <ul id="userList"></ul>
+  </section>
+
+  <section>
+    <h2>Semua Transaksi</h2>
+    <ul id="transactionList"></ul>
+  </section>
+
+  <section>
+    <h2>Activity Log</h2>
+    <ul id="logList"></ul>
+  </section>
+
+  <script src="js/api.js"></script>
+  <script src="js/admin.js"></script>
+</body>
+</html>

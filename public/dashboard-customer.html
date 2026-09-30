@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Dashboard Customer</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <h1>Dashboard</h1>
+  <nav>
+    <a href="profile.html">Profil</a>
+    <button id="logoutBtn">Logout</button>
+  </nav>
+
+  <section>
+    <h2>Ringkasan</h2>
+    <p>Total Pemasukan: <span id="totalIncome">0</span></p>
+    <p>Total Pengeluaran: <span id="totalExpense">0</span></p>
+    <p>Saldo: <span id="balance">0</span></p>
+  </section>
+
+  <section>
+    <h2>Tambah Pemasukan</h2>
+    <form id="incomeForm">
+      <input type="text" id="source" placeholder="Sumber" required>
+      <input type="text" id="incomeDescription" placeholder="Deskripsi">
+      <input type="number" id="incomeAmount" placeholder="Jumlah" required>
+      <input type="date" id="incomeDate" required>
+      <button type="submit">Tambah</button>
+    </form>
+  </section>
+
+  <section>
+    <h2>Daftar Pemasukan</h2>
+    <ul id="incomeList"></ul>
+  </section>
+
+  <section>
+    <h2>Tambah Pengeluaran</h2>
+    <form id="expenseForm">
+    <input type="text" id="item" placeholder="Item" required>
+    <input type="text" id="expenseDescription" placeholder="Deskripsi">
+    <input type="number" id="expenseAmount" placeholder="Jumlah" required>
+    <input type="date" id="expenseDate" required>
+    <button type="submit">Tambah</button>
+    </form>
+  </section>
+
+  <section>
+    <h2>Daftar Pengeluaran</h2>
+    <ul id="expenseList"></ul>
+  </section>
+
+  <script src="js/api.js"></script>
+  <script src="js/dashboard.js"></script>
+</body>
+</html>

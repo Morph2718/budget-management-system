@@ -119,6 +119,25 @@ async function login(req, res) {
   }
 }
 
+async function getProfile(req, res) {
+  try {
+    const user = await userModel.findById(req.user.userId);
+    res.status(200).json({
+      user: {
+        id: user.id,
+        first_name: user.first_name,
+        last_name: user.last_name,
+        email: user.email,
+        username: user.username,
+        role: user.role,
+      },
+    });
+  } catch (err) {
+    req.log.error({ err }, 'Gagal mengambil profil user');
+    res.status(500).json({ error: 'Terjadi kesalahan server' });
+  }
+}
+
 async function updateProfile(req, res) {
   try {
     const { firstName, lastName, email, newPassword } = req.body;
@@ -160,4 +179,4 @@ function logout(req, res) {
   res.status(200).json({ message: 'Logout berhasil' });
 }
 
-module.exports = { register, login, updateProfile, logout };
+module.exports = { register, login, getProfile, updateProfile, logout };
