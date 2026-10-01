@@ -75,6 +75,11 @@ app.use('/api/admin', adminRoutes);
 // Nyalakan server
 Sentry.setupExpressErrorHandler(app);
 
-app.listen(PORT, () => {
-  logger.info(`Server jalan di port ${PORT}`);
-});
+// Nyalakan server — hanya saat dijalankan lokal, bukan di Vercel
+if (process.env.NODE_ENV !== 'production') {
+  app.listen(PORT, () => {
+    logger.info(`Server jalan di port ${PORT}`);
+  });
+}
+
+module.exports = app;

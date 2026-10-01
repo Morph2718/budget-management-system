@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Budget Management System</title>
+</head>
+<body>
+  <script>
+    const token = localStorage.getItem('token');
+    const role = localStorage.getItem('role');
+
+    if (!token) {
+      window.location.href = 'login.html';
+    } else if (role === 'customer') {
+      window.location.href = 'dashboard-customer.html';
+    } else if (role === 'admin') {
+      window.location.href = 'dashboard-admin.html';
+    } else if (role === 'owner') {
+      window.location.href = 'dashboard-owner.html';
+    }
+  </script>
+</body>
+</html>

@@ -1,7 +1,19 @@
-const token = localStorage.getItem('token');
-if (!token) {
-  window.location.href = 'login.html';
+function checkAuth() {
+  const token = localStorage.getItem('token');
+  if (!token) {
+    window.location.href = 'login.html';
+  }
 }
+
+checkAuth();
+
+window.addEventListener('pageshow', (event) => {
+  if (event.persisted) {
+    checkAuth();
+  }
+});
+
+const token = localStorage.getItem('token');
 
 async function loadProfile() {
   try {

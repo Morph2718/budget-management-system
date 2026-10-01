@@ -1,9 +1,20 @@
+function checkAuth() {
+  const token = localStorage.getItem('token');
+  if (!token) {
+    window.location.href = 'login.html';
+  }
+}
+
+checkAuth();
+
+window.addEventListener('pageshow', (event) => {
+  if (event.persisted) {
+    checkAuth();
+  }
+});
+
 const token = localStorage.getItem('token');
 const role = localStorage.getItem('role');
-
-if (!token) {
-  window.location.href = 'login.html';
-}
 
 async function loadSummary() {
   try {
