@@ -22,6 +22,7 @@ const { recordRequest, getMetrics } = require('./src/utils/metrics');
 
 // Inisialisasi
 const app = express();
+app.set('trust proxy', 1);
 const PORT = process.env.PORT || 3000;
 
 // Middleware
