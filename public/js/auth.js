@@ -1,28 +1,31 @@
-document.getElementById('loginForm').addEventListener('submit', async (event) => {
-  event.preventDefault();
+const loginForm = document.getElementById('loginForm');
+if (loginForm) {
+  loginForm.addEventListener('submit', async (event) => {
+    event.preventDefault();
 
-  const username = document.getElementById('username').value;
-  const password = document.getElementById('password').value;
-  const errorMsg = document.getElementById('errorMsg');
+    const username = document.getElementById('username').value;
+    const password = document.getElementById('password').value;
+    const errorMsg = document.getElementById('errorMsg');
 
-  try {
-    const data = await apiRequest('/auth/login', 'POST', { username, password });
+    try {
+      const data = await apiRequest('/auth/login', 'POST', { username, password });
 
-    localStorage.setItem('token', data.token);
-    localStorage.setItem('role', data.user.role);
+      localStorage.setItem('token', data.token);
+      localStorage.setItem('role', data.user.role);
 
-    // Arahkan ke dashboard sesuai role
-    if (data.user.role === 'customer') {
-      window.location.href = 'dashboard-customer.html';
-    } else if (data.user.role === 'admin') {
-      window.location.href = 'dashboard-admin.html';
-    } else if (data.user.role === 'owner') {
-      window.location.href = 'dashboard-owner.html';
+      // Arahkan ke dashboard sesuai role
+      if (data.user.role === 'customer') {
+        window.location.href = 'dashboard-customer.html';
+      } else if (data.user.role === 'admin') {
+        window.location.href = 'dashboard-admin.html';
+      } else if (data.user.role === 'owner') {
+        window.location.href = 'dashboard-owner.html';
+      }
+    } catch (err) {
+      errorMsg.textContent = err.message;
     }
-  } catch (err) {
-    errorMsg.textContent = err.message;
-  }
-});
+  });
+}
 
 const registerForm = document.getElementById('registerForm');
 if (registerForm) {
