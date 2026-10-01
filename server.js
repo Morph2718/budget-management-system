@@ -7,7 +7,9 @@ Sentry.init({
   environment: process.env.NODE_ENV || 'development',
 });
 
+
 const express = require('express');
+const path = require('path');
 
 const pool = require('./src/config/db');
 const authRoutes = require('./src/routes/authRoutes');
@@ -27,7 +29,7 @@ const PORT = process.env.PORT || 3000;
 
 // Middleware
 app.use(express.json());
-app.use(express.static('public'));
+app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(
   pinoHttp({
