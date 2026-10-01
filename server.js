@@ -50,10 +50,6 @@ app.use((req, res, next) => {
 });
 
 // Routes
-app.get('/', (req, res) => {
-  res.send('OK');
-});
-
 app.get('/health', async (req, res) => {
   try {
     await pool.query('SELECT 1');
