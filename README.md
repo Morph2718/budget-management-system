@@ -57,6 +57,7 @@ Role `owner` tidak bisa didapat lewat pendaftaran biasa — endpoint `/register`
   /models       → query ke database
   /utils        → logger (Pino) dan metrics
 /public         → seluruh file frontend (HTML, CSS, JS)
+/sql            → file schema.sql, skema database lengkap
 server.js       → entry point aplikasi
 vercel.json     → konfigurasi deployment ke Vercel
 ```
@@ -138,7 +139,7 @@ Memantau endpoint `/health` setiap 5 menit, mengirim notifikasi otomatis jika se
 | POST | /api/auth/login | Publik | Login, menerbitkan JWT |
 | GET | /api/auth/profile | Login | Lihat profil sendiri |
 | PUT | /api/auth/profile | Login | Update profil sendiri |
-| POST | /api/auth/logout | Login | Mencatat log logout |
+| POST | /api/auth/logout | Login | Konfirmasi logout (penghapusan token dilakukan di sisi client, lewat localStorage) |
 | POST | /api/incomes | Login | Tambah pemasukan |
 | GET | /api/incomes | Login | Lihat pemasukan sendiri |
 | PUT | /api/incomes/:id | Login | Update pemasukan sendiri |
