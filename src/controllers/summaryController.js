@@ -1,5 +1,6 @@
 const incomeModel = require('../models/incomeModel');
 const expenseModel = require('../models/expenseModel');
+const Sentry = require('@sentry/node');
 
 async function getSummary(req, res) {
   try {

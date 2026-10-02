@@ -1,5 +1,6 @@
 const incomeModel = require('../models/incomeModel');
 const activityLogModel = require('../models/activityLogModel');
+const Sentry = require('@sentry/node');
 
 async function create(req, res) {
   try {

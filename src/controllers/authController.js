@@ -1,6 +1,7 @@
 const bcrypt = require('bcrypt');
 const userModel = require('../models/userModel');
 const activityLogModel = require('../models/activityLogModel');
+const Sentry = require('@sentry/node');
 
 async function register(req, res) {
   try {

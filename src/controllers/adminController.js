@@ -2,6 +2,7 @@ const userModel = require('../models/userModel');
 const incomeModel = require('../models/incomeModel');
 const expenseModel = require('../models/expenseModel');
 const activityLogModel = require('../models/activityLogModel');
+const Sentry = require('@sentry/node');
 
 //admin skill
 async function getAllUsers(req, res) {
