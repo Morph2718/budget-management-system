@@ -14,7 +14,6 @@ window.addEventListener('pageshow', (event) => {
 });
 
 const token = localStorage.getItem('token');
-const role = localStorage.getItem('role');
 
 async function loadSummary() {
   try {
