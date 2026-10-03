@@ -18,10 +18,10 @@ const token = localStorage.getItem('token');
 async function loadAdminSummary() {
   try {
     const data = await apiRequest('/admin/dashboard', 'GET');
-    document.getElementById('adminTotalIncome').textContent = data.totalIncome;
-    document.getElementById('adminTotalExpense').textContent = data.totalExpense;
-    document.getElementById('adminBalance').textContent = data.balance;
-    document.getElementById('adminTotalUsers').textContent = data.totalUsers;
+    document.getElementById('ownerTotalIncome').textContent = data.totalIncome;
+    document.getElementById('ownerTotalExpense').textContent = data.totalExpense;
+    document.getElementById('ownerBalance').textContent = data.balance;
+    document.getElementById('ownerTotalUsers').textContent = data.totalUsers;
   } catch (err) {
     console.error(err);
   }
