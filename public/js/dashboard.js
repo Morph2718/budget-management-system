@@ -1,3 +1,6 @@
+let editingIncomeId = null;
+let editingExpenseId = null;
+
 function checkAuth() {
   const token = localStorage.getItem('token');
   if (!token) {
@@ -36,10 +39,22 @@ async function loadIncomes() {
         (income) => `
         <li>
           ${income.source} - Rp${income.amount} (${income.occurred_at.split('T')[0]})
+          <button class="editIncomeBtn" data-id="${income.id}" data-source="${income.source}" data-description="${income.description || ''}" data-amount="${income.amount}" data-date="${income.occurred_at.split('T')[0]}">Edit</button>
         </li>
       `
       )
       .join('');
+
+    // Pasang event listener untuk semua tombol edit yang baru dibuat
+    document.querySelectorAll('.editIncomeBtn').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        document.getElementById('source').value = btn.dataset.source;
+        document.getElementById('incomeDescription').value = btn.dataset.description;
+        document.getElementById('incomeAmount').value = btn.dataset.amount;
+        document.getElementById('incomeDate').value = btn.dataset.date;
+        editingIncomeId = btn.dataset.id; // simpan id yang sedang diedit
+      });
+    });
   } catch (err) {
     console.error(err);
   }
@@ -54,10 +69,18 @@ document.getElementById('incomeForm').addEventListener('submit', async (event) =
   const occurredAt = document.getElementById('incomeDate').value;
 
   try {
-    await apiRequest('/incomes', 'POST', { source, description, amount, occurredAt });
-    event.target.reset(); // kosongkan form setelah berhasil
-    loadIncomes();  // muat ulang daftar
-    loadSummary();  // muat ulang total, karena sudah berubah
+    if (editingIncomeId) {
+      // Mode edit: panggil PUT
+      await apiRequest(`/incomes/${editingIncomeId}`, 'PUT', { source, description, amount, occurredAt });
+      editingIncomeId = null; // reset mode kembali ke tambah
+    } else {
+      // Mode tambah: panggil POST seperti biasa
+      await apiRequest('/incomes', 'POST', { source, description, amount, occurredAt });
+    }
+
+    event.target.reset();
+    loadIncomes();
+    loadSummary();
   } catch (err) {
     console.error(err);
   }
@@ -84,10 +107,22 @@ async function loadExpenses() {
         (expense) => `
         <li>
           ${expense.item} - Rp${expense.amount} (${expense.occurred_at.split('T')[0]})
+          <button class="editExpenseBtn" data-id="${expense.id}" data-item="${expense.item}" data-description="${expense.description || ''}" data-amount="${expense.amount}" data-date="${expense.occurred_at.split('T')[0]}">Edit</button>
         </li>
       `
       )
       .join('');
+
+    // Pasang event listener untuk semua tombol edit yang baru dibuat
+    document.querySelectorAll('.editExpenseBtn').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        document.getElementById('item').value = btn.dataset.item;
+        document.getElementById('expenseDescription').value = btn.dataset.description;
+        document.getElementById('expenseAmount').value = btn.dataset.amount;
+        document.getElementById('expenseDate').value = btn.dataset.date;
+        editingExpenseId = btn.dataset.id; // simpan id yang sedang diedit
+      });
+    });
   } catch (err) {
     console.error(err);
   }
@@ -102,10 +137,18 @@ document.getElementById('expenseForm').addEventListener('submit', async (event) 
   const occurredAt = document.getElementById('expenseDate').value;
 
   try {
-    await apiRequest('/expenses', 'POST', { item, description, amount, occurredAt });
-    event.target.reset(); // kosongkan form setelah berhasil
-    loadExpenses();  // muat ulang daftar
-    loadSummary();  // muat ulang total, karena sudah berubah
+    if (editingExpenseId) {
+      // Mode edit: panggil PUT
+      await apiRequest(`/expenses/${editingExpenseId}`, 'PUT', { item, description, amount, occurredAt });
+      editingExpenseId = null; // reset mode kembali ke tambah
+    } else {
+      // Mode tambah: panggil POST seperti biasa
+      await apiRequest('/expenses', 'POST', { item, description, amount, occurredAt });
+    }
+
+    event.target.reset();
+    loadExpenses();
+    loadSummary();
   } catch (err) {
     console.error(err);
   }

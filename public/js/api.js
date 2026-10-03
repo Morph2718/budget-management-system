@@ -1,5 +1,8 @@
-const API_BASE = 'https://budget-management-system-five.vercel.app/api';
-
+const API_BASE =
+  window.location.hostname === 'localhost'
+    ? 'http://localhost:3000/api'
+    : 'https://budget-management-system-five.vercel.app/api';
+    
 async function apiRequest(endpoint, method = 'GET', body = null) {
   const token = localStorage.getItem('token');
 

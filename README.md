@@ -16,7 +16,7 @@ Aplikasi manajemen keuangan sederhana berbasis web, dibangun sebagai tugas akhir
 | Application Logging | Pino, pino-http |
 | Error Tracking | Sentry |
 | Uptime Monitoring | UptimeRobot |
-| Frontend | HTML, CSS, JavaScript (vanilla) |
+| Frontend | HTML, CSS, JavaScript (vanilla), responsif (meta viewport) |
 | Deployment | Vercel |
 
 ---
@@ -43,6 +43,8 @@ Semua hak admin, ditambah:
 - Akun owner **dijamin hanya ada satu** di seluruh sistem, dijaga langsung di level database lewat *partial unique index*, bukan hanya validasi di kode aplikasi. Akun owner sendiri tidak bisa dihapus lewat endpoint manapun.
 
 Role `owner` tidak bisa didapat lewat pendaftaran biasa — endpoint `/register` selalu membuat akun dengan role `customer` secara default. Akun admin/owner dinaikkan levelnya secara manual langsung di database.
+
+**Navigasi bertingkat:** menu navigasi menyesuaikan role yang sedang login (diatur lewat `public/js/nav.js`). Customer hanya melihat link ke dashboard-nya sendiri. Admin dan owner mewarisi akses ke level di bawahnya — admin bisa membuka dashboard customer dan admin, owner bisa membuka ketiganya. Saat admin/owner membuka dashboard customer, data yang tampil adalah data miliknya sendiri (bukan milik customer lain), karena tetap mengikuti `userId` dari token masing-masing.
 
 ---
 
@@ -160,6 +162,8 @@ Memantau endpoint `/health` setiap 5 menit, mengirim notifikasi otomatis jika se
 3. Salin `.env.example` menjadi `.env`, isi `DATABASE_URL`, `JWT_SECRET`, `SENTRY_DSN` sesuai milikmu
 4. Jalankan `node server.js`
 5. Buka `http://localhost:3000`
+
+Catatan: `public/js/api.js` mendeteksi otomatis apakah halaman dibuka dari `localhost` atau dari domain production, lalu menyesuaikan alamat API yang dipanggil (`API_BASE`) — tidak perlu diubah manual saat berpindah antara testing lokal dan production.
 
 ---
 
